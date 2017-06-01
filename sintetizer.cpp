@@ -5,7 +5,7 @@
  * @Project: Biometrics Research
  * @Filename: sintetizer.cpp
  * @Last modified by:   rafael
- * @Last modified time: 2017-06-01T10:49:00-03:00
+ * @Last modified time: 2017-06-01T11:11:05-03:00
  * @License: MIT
  * @Copyright: Nandlands and Akiyama
  */
@@ -29,13 +29,24 @@ int main(int argc, char **argv) {
       "{output o out | | output image}"
       "{scale s | | scale factor in %}"
       "{rotation rot r | | rotation in degrees}"
-      "{crop c | | size of the computed crops in % relative to input}";
+      "{crop c | | size of the computed crops in % relative to input}"
+      "{nocl | | set to not use OpenCL}";
   auto cmd = CommandLineParser(argc, argv, keys);
 
-  if (cmd.has("help") || !cmd.has("input")) {
+  if (cmd.has("help") || !(cmd.has("input") && cmd.has("output"))) {
     cmd.printMessage();
     return 0;
   }
+
+  ocl::setUseOpenCL((!cmd.has("nocl")));
+
+  UMat input, output;
+  imread(cmd.get<string>("input"), IMREAD_UNCHANGED).copyTo(input);
+  input.copyTo(output);
+
+  // TODO: computation
+
+  imwrite(cmd.get<string>("output"), output);
 
   return 0;
 }
