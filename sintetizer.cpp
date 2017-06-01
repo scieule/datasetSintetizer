@@ -5,7 +5,7 @@
  * @Project: Biometrics Research
  * @Filename: sintetizer.cpp
  * @Last modified by:   rafael
- * @Last modified time: 2017-06-01T11:11:05-03:00
+ * @Last modified time: 2017-06-01T11:26:33-03:00
  * @License: MIT
  * @Copyright: Nandlands and Akiyama
  */
@@ -44,7 +44,11 @@ int main(int argc, char **argv) {
   imread(cmd.get<string>("input"), IMREAD_UNCHANGED).copyTo(input);
   input.copyTo(output);
 
-  // TODO: computation
+  if (cmd.has("scale")) {
+    double s = cmd.get<double>("scale");
+    resize(input, output, Size(), s, s);
+    output.copyTo(input);
+  }
 
   imwrite(cmd.get<string>("output"), output);
 
