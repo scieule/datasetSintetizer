@@ -5,7 +5,7 @@
  * @Project: Biometrics Research
  * @Filename: sintetizer.cpp
  * @Last modified by:   rafael
- * @Last modified time: 2017-06-01T11:26:33-03:00
+ * @Last modified time: 2017-06-01T12:52:40-03:00
  * @License: MIT
  * @Copyright: Nandlands and Akiyama
  */
@@ -28,7 +28,9 @@ int main(int argc, char **argv) {
       "{input i in | | input image}"
       "{output o out | | output image}"
       "{scale s | | scale factor in %}"
-      "{rotation rot r | | rotation in degrees}"
+      "{rotate90 r90 | | rotate in 90 degrees}"
+      "{rotate180 r180 | | rotate in 180 degrees}"
+      "{rotate270 r270 | | rotate in 270 degrees}"
       "{crop c | | size of the computed crops in % relative to input}"
       "{nocl | | set to not use OpenCL}";
   auto cmd = CommandLineParser(argc, argv, keys);
@@ -49,6 +51,14 @@ int main(int argc, char **argv) {
     resize(input, output, Size(), s, s);
     output.copyTo(input);
   }
+
+  if (cmd.has("rotate90"))
+    rotate(input, output, ROTATE_90_CLOCKWISE);
+  else if (cmd.has("rotate180"))
+    rotate(input, output, ROTATE_180);
+  else if (cmd.has("rotate270"))
+    rotate(input, output, ROTATE_90_COUNTERCLOCKWISE);
+  output.copyTo(input);
 
   imwrite(cmd.get<string>("output"), output);
 
